@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -19,6 +20,12 @@ public class Practice13GetTextBoundsView extends View {
     String text6 = "â";
     int top = 200;
     int bottom = 400;
+    Rect rect1 = new Rect();
+    Rect rect2 = new Rect();
+    Rect rect3 = new Rect();
+    Rect rect4 = new Rect();
+    Rect rect5 = new Rect();
+    Rect rect6 = new Rect();
 
     public Practice13GetTextBoundsView(Context context) {
         super(context);
@@ -37,24 +44,35 @@ public class Practice13GetTextBoundsView extends View {
         paint1.setStrokeWidth(20);
         paint1.setColor(Color.parseColor("#E91E63"));
         paint2.setTextSize(160);
+
+        paint2.getTextBounds(text1, 0, text1.length(), rect1);
+        paint2.getTextBounds(text2, 0, text2.length(), rect2);
+        paint2.getTextBounds(text3, 0, text3.length(), rect3);
+        paint2.getTextBounds(text4, 0, text4.length(), rect4);
+        paint2.getTextBounds(text5, 0, text5.length(), rect5);
+        paint2.getTextBounds(text6, 0, text6.length(), rect6);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
+        /**
+         * 基准线baseline不平齐...
+         * drawText 的 y轴坐标即是baseLine.drawText 的 y轴坐标即是baseLine.drawText 的 y轴坐标即是baseLine.
+         * j算着算着就忘记了baseline不是在底部
+         * text4 j,不要按照bound的top和bottom去算,因为baseline不是在底部,而是在上面,得考虑baseline不是在底部的情况
+         */
         canvas.drawRect(50, top, getWidth() - 50, bottom, paint1);
 
         // 使用 Paint.getTextBounds() 计算出文字的显示区域
         // 然后计算出文字的绘制位置，从而让文字上下居中
         // 这种居中算法的优点是，可以让文字精准地居中，分毫不差
-
         int middle = (top + bottom) / 2;
-        canvas.drawText(text1, 100, middle, paint2);
-        canvas.drawText(text2, 200, middle, paint2);
-        canvas.drawText(text3, 300, middle, paint2);
-        canvas.drawText(text4, 400, middle, paint2);
-        canvas.drawText(text5, 500, middle, paint2);
-        canvas.drawText(text6, 600, middle, paint2);
+        canvas.drawText(text1, 100, middle + (rect1.bottom - rect1.top) / 2 - rect1.bottom, paint2);
+        canvas.drawText(text2, 200, middle + (rect2.bottom - rect2.top) / 2 - rect2.bottom, paint2);
+        canvas.drawText(text3, 300, middle + (rect3.bottom - rect3.top) / 2 - rect3.bottom, paint2);
+        canvas.drawText(text4, 400, middle + (rect4.bottom - rect4.top) / 2 - rect4.bottom, paint2);
+        canvas.drawText(text5, 500, middle + (rect5.bottom - rect5.top) / 2 - rect5.bottom, paint2);
+        canvas.drawText(text6, 600, middle + (rect6.bottom - rect6.top) / 2 - rect6.bottom, paint2);
     }
 }
